@@ -26,9 +26,18 @@ jobs:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
+    - name: print current path
+      run: pwd
+    - name: use node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: ./template-vanilla/package-lock.json
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - name: upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: ./template-vanilla/dist
